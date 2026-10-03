@@ -1,0 +1,29 @@
+name: Gerar APK SGTV
+
+on:
+  workflow_dispatch: # Permite iniciar a geracao manualmente com 1 clique
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Baixar codigo
+        uses: actions/checkout@v4
+
+      - name: Configurar Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      - name: Configurar Gradle
+        uses: gradle/actions/setup-gradle@v3
+
+      - name: Compilar APK
+        run: ./gradlew assembleDebug --stacktrace
+
+      - name: Disponibilizar APK para Download
+        uses: actions/upload-artifact@v4
+        with:
+          name: SGTV-Instalavel
+          path: app/build/outputs/apk/debug/*.apk
